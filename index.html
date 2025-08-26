@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Responsive Offline Flipbook with Side Buttons</title>
+  <title>Responsive Flipbook</title>
   <style>
     body {
       background: #f0f0f0;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
       height: 100vh;
       margin: 0;
-      overflow: hidden; /* prevent scrollbars */
+      overflow: hidden;
       position: relative;
     }
 
@@ -38,8 +37,8 @@
     #flipbook .page img {
       width: 100%;
       height: 100%;
-      display: block;
       object-fit: contain;
+      display: block;
     }
 
     .nav-buttons {
@@ -47,30 +46,35 @@
       top: 50%;
       width: 100%;
       pointer-events: none;
+      z-index: 10;
     }
 
     .nav-buttons button {
+      pointer-events: auto;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      padding: 15px 20px;
-      font-size: 18px;
+      padding: 20px 25px;
+      font-size: 20px;
       cursor: pointer;
-      pointer-events: auto;
-      opacity: 0.7;
-      background-color: #333;
+      background-color: rgba(51, 51, 51, 0.8);
       color: #fff;
       border: none;
       border-radius: 5px;
     }
 
-    #prev { left: 10px; }
-    #next { right: 10px; }
+    #prev { left: 5%; }
+    #next { right: 5%; }
+
+    @media (max-width: 600px) {
+      .nav-buttons button {
+        padding: 25px 30px;
+        font-size: 22px;
+      }
+    }
   </style>
 
-  <!-- jQuery (local) -->
   <script src="js/jquery.min.js"></script>
-  <!-- Turn.js (local) -->
   <script src="js/turn.min.js"></script>
 </head>
 <body>
@@ -86,11 +90,11 @@
     <div class="page"><img src="images/7.jpg"></div>
     <div class="page"><img src="images/8.jpg"></div>
   </div>
-</div>
 
-<div class="nav-buttons">
-  <button id="prev">&#9664;</button>
-  <button id="next">&#9654;</button>
+  <div class="nav-buttons">
+    <button id="prev">&#9664;</button>
+    <button id="next">&#9654;</button>
+  </div>
 </div>
 
 <script>
@@ -113,9 +117,15 @@
       resizeFlipbook();
     });
 
-    // Navigation buttons
+    // Navigation buttons always work
     $("#prev").click(function() { flipbook.turn("previous"); });
     $("#next").click(function() { flipbook.turn("next"); });
+
+    // Enable swipe only on touch devices
+    if ('ontouchstart' in document.documentElement) {
+      flipbook.on('swipeleft', function(){ flipbook.turn('next'); });
+      flipbook.on('swiperight', function(){ flipbook.turn('previous'); });
+    }
   });
 </script>
 
